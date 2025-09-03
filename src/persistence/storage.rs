@@ -1,5 +1,4 @@
 extern crate proc_macro;
-use proc_macro::TokenStream;
 
 use godot::prelude::GodotClass;
 use godot::prelude::godot_api;
@@ -15,16 +14,6 @@ pub static SINGLETON: LazyLock<Mutex<Storage>> = LazyLock::new(|| Mutex::new(Sto
     items: HashMap::new()
 }));
 
-#[macro_export]
-macro_rules! freezable {
-    ($($struct:item)*) => (
-        $(
-            #[derive(serde::Serialize, serde::Deserialize)]
-            $struct
-        ),*
-    );
-}
-
 pub trait Freezable: Serialize + for<'a> Deserialize<'a> {}
 
 
@@ -37,16 +26,19 @@ pub struct Storage {
 
 #[godot_api]
 impl Storage {
-    pub fn save<T: Freezable>(key: &'static str, item: T) {
+    pub fn save<T: Freezable>(key: &'static str, item: &T) {
         let string = serde_json::to_string(&item).expect("Error serializing string");
         SINGLETON.lock().expect("Could not lock storage").items.insert(key.to_string(), string);
     }
 
-    pub fn load<T: Freezable>(key: &'static str) -> T {
+    pub fn load<T: Freezable + std::default::Default>(key: &'static str) -> T {
         let binding = SINGLETON.lock().expect("Failed to lock singleton");
         let items = &binding.deref().items;
-        let item = items[key].clone();
-        serde_json::from_str(&item).expect("Failed to deserialize")
+        let item = items.get(key);
+        match item {
+            Some(value) => serde_json::from_str(value).expect("Failed to deserialize"),
+            None => T::default()
+        }
     }
 
     #[func]
