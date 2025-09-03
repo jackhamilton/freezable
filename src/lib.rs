@@ -1,2 +1,4 @@
-mod tests;
 mod persistence;
+
+#[cfg(test)]
+mod tests;

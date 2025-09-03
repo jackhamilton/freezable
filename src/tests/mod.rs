@@ -1,1 +1,1 @@
-mod example;
+pub mod storage_test;

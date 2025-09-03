@@ -1,3 +1,12 @@
+extern crate proc_macro;
+use proc_macro::TokenStream;
+
+use godot::prelude::GodotClass;
+use godot::prelude::godot_api;
+use std::ops::DerefMut;
+use godot::classes::file_access::ModeFlags;
+use std::ops::Deref;
+use godot::classes::FileAccess;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use std::sync::{LazyLock, Mutex};
@@ -6,17 +15,54 @@ pub static SINGLETON: LazyLock<Mutex<Storage>> = LazyLock::new(|| Mutex::new(Sto
     items: HashMap::new()
 }));
 
+#[macro_export]
+macro_rules! freezable {
+    ($($struct:item)*) => (
+        $(
+            #[derive(serde::Serialize, serde::Deserialize)]
+            $struct
+        ),*
+    );
+}
+
 pub trait Freezable: Serialize + for<'a> Deserialize<'a> {}
 
-impl Freezable for String {}
 
+#[derive(Serialize, Deserialize)]
+#[derive(GodotClass)]
+#[class(base = Node, no_init)]
 pub struct Storage {
     items: HashMap<String, String>
 }
 
+#[godot_api]
 impl Storage {
-    pub fn save<T: Freezable>(key: String, item: T) {
+    pub fn save<T: Freezable>(key: &'static str, item: T) {
         let string = serde_json::to_string(&item).expect("Error serializing string");
-        SINGLETON.lock().expect("Could not lock storage").items.insert(key, string);
+        SINGLETON.lock().expect("Could not lock storage").items.insert(key.to_string(), string);
+    }
+
+    pub fn load<T: Freezable>(key: &'static str) -> T {
+        let binding = SINGLETON.lock().expect("Failed to lock singleton");
+        let items = &binding.deref().items;
+        let item = items[key].clone();
+        serde_json::from_str(&item).expect("Failed to deserialize")
+    }
+
+    #[func]
+    pub fn save_all() {
+        let mut file = FileAccess::open("user://game_data.save", ModeFlags::WRITE).expect("Failed to open data file");
+        let singleton = SINGLETON.lock().expect("Failed to lock singleton");
+        let json = serde_json::to_string(singleton.deref()).expect("Could not convert to string");
+        file.store_string(&json);
+    }
+
+    #[func]
+    pub fn load_all() {
+        if let Some(file) = FileAccess::open("user://game_data.save", ModeFlags::READ) {
+            let json = file.get_as_text();
+            let data: Storage = serde_json::from_str(json.to_string().as_str()).expect("Failed to read file");
+            *SINGLETON.lock().expect("Failed to lock singleton").deref_mut() = data;
+        }
     }
 }
