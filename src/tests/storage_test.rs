@@ -91,4 +91,5 @@ fn test_partial_deserialization() {
     assert_eq!(loaded_default.field2, test_struct.field2);
     assert_eq!(loaded_default.field3, test_struct.field3);
     assert_eq!(loaded_default.field4, test_struct.field4);
+    assert_eq!(loaded_default.field5, Example2::default().field5);
 }
