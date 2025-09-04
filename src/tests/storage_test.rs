@@ -1,9 +1,10 @@
+use std::fmt::Debug;
+
+use crate::freezable::Freezable;
+use freezable_macros::freezable;
 use serde::{Deserialize, Serialize};
 
-use macros::freezable;
-use crate::persistence::storage::{Freezable, Storage};
-
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Clone)]
 #[freezable]
 struct Example {
     pub field1: String,
@@ -45,22 +46,23 @@ impl Default for Example2 {
     }
 }
 
+fn validate_ser<T: Freezable + Debug + PartialEq>(item: T) {
+    let string = serde_json::to_string(&item).expect("Error serializing string");
+    let deser: T = serde_json::from_str(&string).expect("Failed to deserialize");
+    assert_eq!(item, deser);
+}
+
+fn ser_deser<T: Freezable + Debug + PartialEq, G: Freezable>(item: T) -> G {
+    let string = serde_json::to_string(&item).expect("Error serializing string");
+    let deser: G = serde_json::from_str(&string).expect("Failed to deserialize");
+    deser
+}
+
 #[test]
 fn test_string_serialize() {
     let str = "Test";
-    Storage::save("test_str", &"Test".to_string());
-    let out: String = Storage::load("test_str");
-    assert_eq!(out, str);
+    validate_ser(str.to_string());
 }
-
-#[test]
-fn test_struct_serialize() {
-    let str = "Test";
-    Storage::save("test_str", &"Test".to_string());
-    let out: String = Storage::load("test_str");
-    assert_eq!(out, str);
-}
-
 #[test]
 fn test_freezable_serialize() {
     let test_struct = Example {
@@ -69,27 +71,23 @@ fn test_freezable_serialize() {
         field3: true,
         field4: 3.0
     };
-    Storage::save("test_str", &test_struct);
-    let out: Example = Storage::load("test_str");
-    assert_eq!(out, test_struct);
+    validate_ser(test_struct);
 }
 
 #[test]
 fn test_freezable_serialize_defaults() {
     let test_struct = Example::default();
-    let loaded_default = Storage::load::<Example>("test_str");
-    assert_eq!(loaded_default, test_struct);
+    let reser: Example = ser_deser(test_struct.clone());
+    assert_eq!(reser, test_struct);
 }
 
 #[test]
 fn test_partial_deserialization() {
     let test_struct = Example::default();
-    Storage::save("test_str", &test_struct);
-    let loaded_default = Storage::load::<Example2>("test_str");
-    println!("loaded: {:?}", loaded_default);
-    assert_eq!(loaded_default.field1, test_struct.field1);
-    assert_eq!(loaded_default.field2, test_struct.field2);
-    assert_eq!(loaded_default.field3, test_struct.field3);
-    assert_eq!(loaded_default.field4, test_struct.field4);
-    assert_eq!(loaded_default.field5, Example2::default().field5);
+    let resered: Example2 = ser_deser(test_struct.clone());
+    assert_eq!(resered.field1, test_struct.field1);
+    assert_eq!(resered.field2, test_struct.field2);
+    assert_eq!(resered.field3, test_struct.field3);
+    assert_eq!(resered.field4, test_struct.field4);
+    assert_eq!(resered.field5, Example2::default().field5);
 }

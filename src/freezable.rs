@@ -1,5 +1,8 @@
 use std::collections::HashMap;
-use crate::persistence::storage::Freezable;
+use serde::Deserialize;
+use serde::Serialize;
+
+pub trait Freezable: Serialize + for<'a> Deserialize<'a> {}
 
 impl Freezable for String {}
 impl Freezable for i8 {}

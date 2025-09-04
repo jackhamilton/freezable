@@ -1,4 +1,4 @@
-mod persistence;
+mod freezable;
 
 #[cfg(test)]
 mod tests;
