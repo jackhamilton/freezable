@@ -18,4 +18,4 @@ impl Freezable for u64 {}
 impl Freezable for bool {}
 
 impl<T: Freezable> Freezable for Vec<T> {}
-impl<T: Freezable + std::cmp::Eq + std::hash::Hash> Freezable for HashMap<T, T> {}
+impl<T: Freezable + std::cmp::Eq + std::hash::Hash, G: Freezable> Freezable for HashMap<T, G> {}
