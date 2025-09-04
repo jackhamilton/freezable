@@ -1,5 +1,5 @@
 [package]
-name = "freezable_trait"
+name = "freezable-trait"
 version = "0.1.2"
 edition = "2024"
 license = "Unlicense"
