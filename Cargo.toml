@@ -1,7 +1,13 @@
 [package]
-name = "freezable"
+name = "freezable-trait"
 version = "0.1.0"
 edition = "2024"
+license = "Unlicense"
+authors = ["Jack Hamilton jackham800@gmail.com"]
+keywords = []
+categories = ["Encoding"]
+repository = "https://github.com/jackhamilton/freezable"
+description = "Allows you to freeze supported structs to json."
 
 [lib]
 crate-type = ["cdylib"]  # Compile this crate to a dynamic C library.
