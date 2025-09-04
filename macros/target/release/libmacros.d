@@ -1,1 +1,0 @@
-/home/jack/Documents/GitHub/gdrust-trinkets/macros/target/release/libmacros.so: /home/jack/Documents/GitHub/gdrust-trinkets/macros/src/freezable.rs /home/jack/Documents/GitHub/gdrust-trinkets/macros/src/lib.rs
