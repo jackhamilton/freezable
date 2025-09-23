@@ -1,6 +1,6 @@
 [package]
 name = "freezable-trait"
-version = "0.1.7"
+version = "0.1.8"
 edition = "2024"
 license = "Unlicense"
 authors = ["Jack Hamilton jackham800@gmail.com"]
