@@ -1,8 +1,6 @@
+use crate as freezable_trait;
 use std::fmt::Debug;
-
-use crate::freezable::Freezable;
 use freezable_macros::freezable;
-use serde::{Deserialize, Serialize};
 
 #[derive(Debug, PartialEq, Clone)]
 #[freezable]
@@ -46,13 +44,13 @@ impl Default for Example2 {
     }
 }
 
-fn validate_ser<T: Freezable + Debug + PartialEq>(item: T) {
+fn validate_ser<T: freezable_trait::Freezable + Debug + PartialEq>(item: T) {
     let string = serde_json::to_string(&item).expect("Error serializing string");
     let deser: T = serde_json::from_str(&string).expect("Failed to deserialize");
     assert_eq!(item, deser);
 }
 
-fn ser_deser<T: Freezable + Debug + PartialEq, G: Freezable>(item: T) -> G {
+fn ser_deser<T: freezable_trait::Freezable + Debug + PartialEq, G: freezable_trait::Freezable>(item: T) -> G {
     let string = serde_json::to_string(&item).expect("Error serializing string");
     let deser: G = serde_json::from_str(&string).expect("Failed to deserialize");
     deser
