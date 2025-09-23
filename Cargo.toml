@@ -1,6 +1,6 @@
 [package]
 name = "freezable-trait"
-version = "0.1.8"
+version = "0.2.0"
 edition = "2024"
 license = "Unlicense"
 authors = ["Jack Hamilton jackham800@gmail.com"]
@@ -12,5 +12,5 @@ description = "Allows you to freeze supported structs to json."
 [dependencies]
 serde = { version = "1.0.219", features = ["derive"] }
 serde_json = "1.0.143"
-freezable-macros = "~0"
+freezable-macros = "0.1.3"
 
