@@ -1,8 +1,7 @@
-use crate as freezable_trait;
-use std::fmt::Debug;
+use std::{collections::HashMap, fmt::Debug};
 use freezable_macros::freezable;
 
-#[derive(Debug, PartialEq, Clone)]
+#[derive(Debug, PartialEq)]
 #[freezable]
 struct Example {
     pub field1: String,
@@ -14,10 +13,11 @@ struct Example {
 impl Default for Example {
     fn default() -> Self {
         Self {
+            _unknown_fields: HashMap::default(),
             field1: "def_test".to_string(),
             field2: 7,
             field3: true,
-            field4: 12.5
+            field4: 12.5,
         }
     }
 }
@@ -35,6 +35,7 @@ struct Example2 {
 impl Default for Example2 {
     fn default() -> Self {
         Self {
+            _unknown_fields: HashMap::default(),
             field1: "def_test_2".to_string(),
             field2: 4,
             field3: false,
@@ -67,7 +68,8 @@ fn test_freezable_serialize() {
         field1: "Test".to_string(),
         field2: 4,
         field3: true,
-        field4: 3.0
+        field4: 3.0,
+        _unknown_fields: [].into()
     };
     validate_ser(test_struct);
 }
