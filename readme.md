@@ -31,14 +31,26 @@ It requires the struct implement Default, as one of the things it does is apply 
 
 Freezable provides the following helper functions as trait members:
 - write_to_file(&self, path: PathBuf)
+
 Serializes the struct and writes it to a new file at the given Path.
+
+
 - write_to_file_str(&self, path: String)
+
 Serializes the struct and writes it to a new file at the given path string. Supports '~' and other relative positioning os-specifics via the shellexpand crate.
+
 - from_file(&self, path: PathBuf)
+
 Deserializes the struct from the file at the given path. If no file exists, you get Config::default(). If some fields are missing, present ones are initialized from the file and missing ones are initialized based on default values.
+
 - from_file_str(&self, path: &str)
+
 Does the above, but using a shellexpanded str path instead as described in write_to_file_str.
+
 - freeze_to_string(&self)
+
 Returns the struct as a json string.
+
 - unfreeze_from_string(from: String)
+
 Deserializes the type from a given json string.
