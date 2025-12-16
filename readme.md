@@ -52,7 +52,7 @@ from_file(&self, path: PathBuf)
 
 
 ```rust
-from_file_str(&self, path: &str)
+from_file_str(&self, path: &str) -> String
 // Does the above, but using a shellexpanded str path instead as described in write_to_file_str.
 ```
 
