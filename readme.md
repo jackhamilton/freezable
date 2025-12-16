@@ -38,13 +38,16 @@ write_to_file(&self, path: PathBuf)
 
 ```rust
 write_to_file_str(&self, path: String)
-// Serializes the struct and writes it to a new file at the given path string. Supports '~' and other relative positioning os-specifics via the shellexpand crate.
+// Serializes the struct and writes it to a new file at the given path string.
+// Supports '~' and other relative positioning os-specifics via the shellexpand crate.
 ```
 
 
 ```rust
 from_file(&self, path: PathBuf)
-// Deserializes the struct from the file at the given path. If no file exists, you get Config::default(). If some fields are missing, present ones are initialized from the file and missing ones are initialized based on default values.
+// Deserializes the struct from the file at the given path. If no file exists,
+// you get Config::default(). If some fields are missing, present ones are initialized
+// from the file and missing ones are initialized based on default values.
 ```
 
 
