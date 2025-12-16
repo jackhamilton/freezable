@@ -52,13 +52,13 @@ from_file(&self, path: PathBuf)
 
 
 ```rust
-from_file_str(&self, path: &str) -> String
+from_file_str(&self, path: &str)
 // Does the above, but using a shellexpanded str path instead as described in write_to_file_str.
 ```
 
 
 ```rust
-freeze_to_string(&self)
+freeze_to_string(&self) -> String
 // Returns the struct as a json string.
 ```
 
