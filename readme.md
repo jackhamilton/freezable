@@ -2,7 +2,7 @@ Provides a wrapper around serde that eliminates a lot of the boilerplate I usual
 
 ```rust
 #[derive(Debug, PartialEq)]
-#[freezable]
+#[freezable] // <- here it is!
 struct Example {
     pub field1: String,
     pub field2: i8,
