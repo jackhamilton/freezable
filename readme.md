@@ -1,3 +1,10 @@
+Available via cargo:
+
+```zsh
+cargo add freezable-trait
+```
+
+
 Provides a wrapper around serde that eliminates a lot of the boilerplate I usually have to write.
 
 ```rust
