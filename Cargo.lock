@@ -25,9 +25,9 @@ dependencies = [
 
 [[package]]
 name = "freezable-macros"
-version = "0.4.0"
+version = "0.6.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "0f433ffb9562bdc5c42b5a6637dddac83f811f6af51595cb44180f77f444eced"
+checksum = "f8dc516f61e6c8845bcaf56cc5025ff847ad754a8ad3b971f92c58bef9800992"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -36,7 +36,7 @@ dependencies = [
 
 [[package]]
 name = "freezable-trait"
-version = "0.5.0"
+version = "0.6.0"
 dependencies = [
  "freezable-macros",
  "serde",

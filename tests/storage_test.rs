@@ -1,48 +1,40 @@
-use std::{collections::HashMap, fmt::Debug};
 use freezable_macros::freezable;
+use std::fmt::Debug;
 
 #[derive(Debug, PartialEq)]
 #[freezable]
 struct Example {
+    #[default("def_test")]
     pub field1: String,
+
+    #[default(7)]
     pub field2: i8,
+
+    #[default(true)]
     pub field3: bool,
+
+    #[default(12.5)]
     pub field4: f32,
 }
 
-impl Default for Example {
-    fn default() -> Self {
-        Self {
-            _unknown_fields: HashMap::default(),
-            field1: "def_test".to_string(),
-            field2: 7,
-            field3: true,
-            field4: 12.5,
-        }
-    }
-}
 
 #[derive(Debug, PartialEq)]
 #[freezable]
 struct Example2 {
+    #[default("def_test_2")]
     pub field1: String,
-    pub field2: i8,
-    pub field3: bool,
-    pub field4: f32,
-    pub field5: f32,
-}
 
-impl Default for Example2 {
-    fn default() -> Self {
-        Self {
-            _unknown_fields: HashMap::default(),
-            field1: "def_test_2".to_string(),
-            field2: 4,
-            field3: false,
-            field4: 1.0,
-            field5: 0.5
-        }
-    }
+    #[default(4)]
+    pub field2: i8,
+
+    #[default(false)]
+    pub field3: bool,
+
+    #[default(1.0)]
+    pub field4: f32,
+
+    #[default(0.5)]
+    pub field5: f32,
 }
 
 fn validate_ser<T: freezable_trait::Freezable + Debug + PartialEq>(item: T) {
@@ -51,7 +43,9 @@ fn validate_ser<T: freezable_trait::Freezable + Debug + PartialEq>(item: T) {
     assert_eq!(item, deser);
 }
 
-fn ser_deser<T: freezable_trait::Freezable + Debug + PartialEq, G: freezable_trait::Freezable>(item: T) -> G {
+fn ser_deser<T: freezable_trait::Freezable + Debug + PartialEq, G: freezable_trait::Freezable>(
+    item: T,
+) -> G {
     let string = serde_json::to_string(&item).expect("Error serializing string");
     let deser: G = serde_json::from_str(&string).expect("Failed to deserialize");
     deser
@@ -69,7 +63,7 @@ fn test_freezable_serialize() {
         field2: 4,
         field3: true,
         field4: 3.0,
-        _unknown_fields: [].into()
+        _unknown_fields: [].into(),
     };
     validate_ser(test_struct);
 }
